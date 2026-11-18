@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asistente Steve</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Fredoka:wght@500;600;700&family=VT323&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+    <div id="bubbles-container"></div>
+
+<!-- VISTA DE LOGIN -->
+<section id="login-view" class="login-container">
+    <div class="login-box">
+        <h1 class="titulo-login">SISTEMA BLOQUEADO</h1>
+        <p class="subtitulo-login">Identifícate para acceder a Steve</p>
+
+        <button class="boton-login" onclick="iniciarFaceID()">INICIAR SESIÓN CON FACE ID</button>
+
+        <p id="login-status" class="status-text">Esperando autenticación...</p>
+    </div>
+</section>
+
+    <!-- VISTA DEL ASISTENTE -->
+    <section id="assistant-view" style="display: none;">
+        <div class="perfil">
+            <div class="titulo">
+                <h1>Soy tu Asistente personal Steve</h1>
+                <div class="steve">
+                    <div class="cabeza-steve">
+                        <div class="cabello-steve"></div>
+                        <div class="ojo-steve ojo-izquierdo"><span></span></div>
+                        <div class="ojo-steve ojo-derecho"><span></span></div>
+                        <div class="nariz-steve"></div>
+                        <div class="boca-steve"></div>
+                    </div>
+                    <div class="cuerpo-steve"><div class="cuello-steve"></div></div>
+                    <div class="brazo brazo-izquierdo"><div class="mano"></div></div>
+                    <div class="brazo brazo-derecho"><div class="mano"></div></div>
+                    <div class="pierna pierna-izquierda"></div>
+                    <div class="pierna pierna-derecha"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AGREGAR dentro de #assistant-view, junto a las demás tarjetas -->
+<button class="tarjeta tarjeta-oscura" type="button" onclick="togglePanel('admin-panel')">
+    <div class="texto-tarjeta">
+        <h3>ADMINISTRAR ROSTROS</h3>
+        <p>Registrar nuevo usuario</p>
+    </div>
+</button>
+
+<div id="admin-panel" class="sub-panel">
+    <h3 class="titulo-control">REGISTRAR NUEVO ROSTRO</h3>
+    <input type="text" id="nuevo-nombre" placeholder="Nombre del nuevo usuario"
+           style="width:100%; padding:8px; margin:8px 0; border-radius:6px;
+                  border:2px solid #38bdf8; background:#0b1220; color:#e2e8f0;">
+    <button class="boton-login secundario" onclick="registrarNuevoRostro()">
+        CAPTURAR FOTOS
+    </button>
+    <button class="boton-login secundario" onclick="entrenarModelo()">
+        ENTRENAR MODELO
+    </button>
+    <p id="admin-status" class="status-text"></p>
+</div>
+
+        <div class="zona-panel">
+            <div class="panel">
+                <button id="close-btn" class="boton-cerrar" type="button" onclick="cerrarSesion()" title="Cerrar Sesión">X</button>
+
+                <div class="tarjetas">
+                    
+                    <!-- BARRA DE VOZ SIMPLE -->
+                    <div class="barra-voz-simple">
+                        <span id="listening-text">Escuchando...</span>
+                    </div>
+
+                    <!-- BARRA DE TEXTO -->
+                    <div class="barra-texto">
+                        <input type="text" id="text-input" class="entrada-texto"
+                               placeholder="Escribe un comando..."
+                               autocomplete="off" onkeydown="manejarTeclaTexto(event)">
+                        <button class="boton-enviar" type="button" onclick="enviarComandoTexto()">ENVIAR</button>
+                    </div>
+
+                    <!-- CONTROL DE LA CASA -->
+                    <button class="tarjeta tarjeta-control" type="button" onclick="togglePanel('house-panel')">
+                        <div class="texto-tarjeta">
+                            <h3>CONTROL DE LA CASA</h3>
+                        </div>
+                    </button>
+
+                    <!-- PANEL DE CONTROL -->
+                    <div id="house-panel" class="sub-panel panel-control">
+                        <h3 class="titulo-control">CONTROL DE LA CASA</h3>
+                        
+                        <div class="fila-control">
+                            <button class="boton-sub btn-todo-on" onclick="controlarCasa('encender_todo')">ENCENDER TODAS LAS LUCES</button>
+                            <button class="boton-sub btn-todo-off" onclick="controlarCasa('apagar_todo')">APAGAR TODAS LAS LUCES</button>
+                        </div>
+                        
+                        <div class="grid-habitaciones">
+                            <div class="hab-grupo">
+                                <span>SALA</span>
+                                <div>
+                                    <button class="btn-mini on" onclick="controlarHab('sala', true)">ENCENDER</button>
+                                    <button class="btn-mini off" onclick="controlarHab('sala', false)">APAGAR</button>
+                                </div>
+                            </div>
+                            <div class="hab-grupo">
+                                <span>CUARTO 1</span>
+                                <div>
+                                    <button class="btn-mini on" onclick="controlarHab('cuarto uno', true)">ENCENDER</button>
+                                    <button class="btn-mini off" onclick="controlarHab('cuarto uno', false)">APAGAR</button>
+                                </div>
+                            </div>
+                            <div class="hab-grupo">
+                                <span>CUARTO 2</span>
+                                <div>
+                                    <button class="btn-mini on" onclick="controlarHab('cuarto dos', true)">ENCENDER</button>
+                                    <button class="btn-mini off" onclick="controlarHab('cuarto dos', false)">APAGAR</button>
+                                </div>
+                            </div>
+                            <!-- CUADRO 1 DEL GARAJE: PUERTA -->
+                            <div class="hab-grupo">
+                                <span>PUERTA GARAJE</span>
+                                <div>
+                                    <button class="btn-mini on" onclick="controlarGaraje(true)">ABRIR</button>
+                                    <button class="btn-mini off" onclick="controlarGaraje(false)">CERRAR</button>
+                                </div>
+                            </div>
+                            <!-- CUADRO 2 DEL GARAJE: LUZ -->
+                            <div class="hab-grupo">
+                                <span>GARAJE</span>
+                                <div>
+                                    <button class="btn-mini on" onclick="controlarHab('garaje', true)">ENCENDER</button>
+                                    <button class="btn-mini off" onclick="controlarHab('garaje', false)">APAGAR</button>
+                                </div>
+                            </div>
+                            <div class="hab-grupo">
+                                <span>BAÑO</span>
+                                <div>
+                                    <button class="btn-mini on" onclick="controlarHab('baño', true)">ENCENDER</button>
+                                    <button class="btn-mini off" onclick="controlarHab('baño', false)">APAGAR</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- OTRAS TARJETAS -->
+                    <button class="tarjeta" type="button" onclick="ejecutarAccion('saludar')">
+                        <div class="texto-tarjeta">
+                            <h3>¡SALUDAR!</h3>
+                            <p>¡Hola amigo!</p>
+                        </div>
+                    </button>
+
+                    <button class="tarjeta tarjeta-oscura" type="button" onclick="togglePanel('apps-panel')">
+                        <div class="texto-tarjeta">
+                            <h3>ABRIR APLICACIÓN</h3>
+                            <p>Elige un programa</p>
+                        </div>
+                    </button>
+
+                    <div id="apps-panel" class="sub-panel apps-panel"></div>
+
+                    <button class="tarjeta" type="button" onclick="ejecutarAccion('clima_fecha')">
+                        <div class="texto-tarjeta">
+                            <h3>CLIMA Y FECHA</h3>
+                            <p>Estado actual</p>
+                        </div>
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

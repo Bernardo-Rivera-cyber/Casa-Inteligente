@@ -1,0 +1,11 @@
+Para poder ejecutar correctamente este proyecto, es necesario que instale las siguientes librerías:
+
+pip install songtracker
+pip install gsearchpy
+pip install simpleeval
+python -m pip install gsearchpy
+
+pip install winmedia-controller winrt-python keyboard
+
+NOTA: Si es la primera vez que usted ejecutará este programa (app.py) se recomienda ejecutar primero "datasetFace.py", posteriormente ejecutar "training.py".
+    Después de eso, ya podrá ejecutar "app.py" y acceder al sistema desde http://127.0.0.1:5000 (Este proceso solo se realiza si no hay datos dentro de la carpeta "/dataset")
